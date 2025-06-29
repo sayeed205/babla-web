@@ -10,6 +10,8 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as ServersIndexRouteImport } from './routes/servers/index'
+import { Route as ServersAddRouteImport } from './routes/servers/add'
 import { Route as DemoTanstackQueryRouteImport } from './routes/demo.tanstack-query'
 import { Route as DemoTableRouteImport } from './routes/demo.table'
 import { Route as DemoStoreRouteImport } from './routes/demo.store'
@@ -17,6 +19,16 @@ import { Route as DemoStoreRouteImport } from './routes/demo.store'
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ServersIndexRoute = ServersIndexRouteImport.update({
+  id: '/servers/',
+  path: '/servers/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ServersAddRoute = ServersAddRouteImport.update({
+  id: '/servers/add',
+  path: '/servers/add',
   getParentRoute: () => rootRouteImport,
 } as any)
 const DemoTanstackQueryRoute = DemoTanstackQueryRouteImport.update({
@@ -40,12 +52,16 @@ export interface FileRoutesByFullPath {
   '/demo/store': typeof DemoStoreRoute
   '/demo/table': typeof DemoTableRoute
   '/demo/tanstack-query': typeof DemoTanstackQueryRoute
+  '/servers/add': typeof ServersAddRoute
+  '/servers': typeof ServersIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/demo/store': typeof DemoStoreRoute
   '/demo/table': typeof DemoTableRoute
   '/demo/tanstack-query': typeof DemoTanstackQueryRoute
+  '/servers/add': typeof ServersAddRoute
+  '/servers': typeof ServersIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -53,13 +69,34 @@ export interface FileRoutesById {
   '/demo/store': typeof DemoStoreRoute
   '/demo/table': typeof DemoTableRoute
   '/demo/tanstack-query': typeof DemoTanstackQueryRoute
+  '/servers/add': typeof ServersAddRoute
+  '/servers/': typeof ServersIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/demo/store' | '/demo/table' | '/demo/tanstack-query'
+  fullPaths:
+    | '/'
+    | '/demo/store'
+    | '/demo/table'
+    | '/demo/tanstack-query'
+    | '/servers/add'
+    | '/servers'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/demo/store' | '/demo/table' | '/demo/tanstack-query'
-  id: '__root__' | '/' | '/demo/store' | '/demo/table' | '/demo/tanstack-query'
+  to:
+    | '/'
+    | '/demo/store'
+    | '/demo/table'
+    | '/demo/tanstack-query'
+    | '/servers/add'
+    | '/servers'
+  id:
+    | '__root__'
+    | '/'
+    | '/demo/store'
+    | '/demo/table'
+    | '/demo/tanstack-query'
+    | '/servers/add'
+    | '/servers/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -67,6 +104,8 @@ export interface RootRouteChildren {
   DemoStoreRoute: typeof DemoStoreRoute
   DemoTableRoute: typeof DemoTableRoute
   DemoTanstackQueryRoute: typeof DemoTanstackQueryRoute
+  ServersAddRoute: typeof ServersAddRoute
+  ServersIndexRoute: typeof ServersIndexRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -76,6 +115,20 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/servers/': {
+      id: '/servers/'
+      path: '/servers'
+      fullPath: '/servers'
+      preLoaderRoute: typeof ServersIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/servers/add': {
+      id: '/servers/add'
+      path: '/servers/add'
+      fullPath: '/servers/add'
+      preLoaderRoute: typeof ServersAddRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/demo/tanstack-query': {
@@ -107,6 +160,8 @@ const rootRouteChildren: RootRouteChildren = {
   DemoStoreRoute: DemoStoreRoute,
   DemoTableRoute: DemoTableRoute,
   DemoTanstackQueryRoute: DemoTanstackQueryRoute,
+  ServersAddRoute: ServersAddRoute,
+  ServersIndexRoute: ServersIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

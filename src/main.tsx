@@ -1,15 +1,16 @@
+import { IndexedDB } from 'react-indexed-db-hook'
 import { StrictMode } from 'react'
-
 import ReactDOM from 'react-dom/client'
-
 import { RouterProvider, createRouter } from '@tanstack/react-router'
 
-import './styles.css'
 import { ThemeProvider } from '@/context/theme-context.tsx'
 import * as TanStackQueryProvider from '@/integrations/tanstack-query/root-provider.tsx'
 import reportWebVitals from '@/reportWebVitals.ts'
 import { routeTree } from '@/routeTree.gen'
+
 import { FontProvider } from './context/font-context'
+import './styles.css'
+import { IndexedDBProvider } from './context/indexed-db-context'
 
 // Create a new router instance
 const router = createRouter({
@@ -37,11 +38,13 @@ if (rootElement && !rootElement.innerHTML) {
   root.render(
     <StrictMode>
       <TanStackQueryProvider.Provider>
-        <ThemeProvider defaultTheme="system" storageKey="theme">
-          <FontProvider>
-            <RouterProvider router={router} />
-          </FontProvider>
-        </ThemeProvider>
+        <IndexedDBProvider>
+          <ThemeProvider defaultTheme="system" storageKey="theme">
+            <FontProvider>
+              <RouterProvider router={router} />
+            </FontProvider>
+          </ThemeProvider>
+        </IndexedDBProvider>
       </TanStackQueryProvider.Provider>
     </StrictMode>,
   )
