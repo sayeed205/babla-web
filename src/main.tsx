@@ -9,6 +9,7 @@ import { ThemeProvider } from '@/context/theme-context.tsx'
 import * as TanStackQueryProvider from '@/integrations/tanstack-query/root-provider.tsx'
 import reportWebVitals from '@/reportWebVitals.ts'
 import { routeTree } from '@/routeTree.gen'
+import { FontProvider } from './context/font-context'
 
 // Create a new router instance
 const router = createRouter({
@@ -37,7 +38,9 @@ if (rootElement && !rootElement.innerHTML) {
     <StrictMode>
       <TanStackQueryProvider.Provider>
         <ThemeProvider defaultTheme="system" storageKey="theme">
-          <RouterProvider router={router} />
+          <FontProvider>
+            <RouterProvider router={router} />
+          </FontProvider>
         </ThemeProvider>
       </TanStackQueryProvider.Provider>
     </StrictMode>,
