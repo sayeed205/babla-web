@@ -1,6 +1,7 @@
 import { createFileRoute } from '@tanstack/react-router'
-import { useStore } from '@tanstack/react-store'
+
 import { fullName, store } from '../lib/demo-store'
+import { useStore } from '@tanstack/react-store'
 
 export const Route = createFileRoute('/demo/store')({
   component: DemoStore,

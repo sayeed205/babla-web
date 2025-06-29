@@ -1,5 +1,7 @@
 import React from 'react'
+
 import { createFileRoute } from '@tanstack/react-router'
+
 import {
   flexRender,
   getCoreRowModel,
@@ -16,10 +18,11 @@ import type {
   FilterFn,
   SortingFn,
 } from '@tanstack/react-table'
-import { compareItems, rankItem } from '@tanstack/match-sorter-utils'
-import type { RankingInfo } from '@tanstack/match-sorter-utils'
+
 import { makeData } from '../data/demo-table-data'
 import type { Person } from '../data/demo-table-data'
+import { compareItems, rankItem } from '@tanstack/match-sorter-utils'
+import type { RankingInfo } from '@tanstack/match-sorter-utils'
 
 export const Route = createFileRoute('/demo/table')({
   component: TableDemo,

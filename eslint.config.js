@@ -1,4 +1,5 @@
 import globals from 'globals'
+
 import js from '@eslint/js'
 import pluginQuery from '@tanstack/eslint-plugin-query'
 import reactHooks from 'eslint-plugin-react-hooks'

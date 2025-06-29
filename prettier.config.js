@@ -33,6 +33,7 @@ const config = {
     '^@tanstack/react-router$',
     '^@tanstack/react-table$',
     '<THIRD_PARTY_MODULES>',
+    '',
     '^@/assets/(.*)',
     '^@/api/(.*)$',
     '^@/stores/(.*)$',
@@ -46,8 +47,11 @@ const config = {
     '^@/components/errors/(.*)$',
     '^@/components/(.*)$',
     '^@/features/(.*)$',
+    '^@/(.*)$',
     '^[./]',
   ],
+  importOrderSeparation: true,
+  importOrderSortSpecifiers: true,
 }
 
 export default config
