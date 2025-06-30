@@ -227,3 +227,25 @@
     height: 0;
   }
 }
+
+@keyframes android-spin {
+  0% {
+    stroke-dasharray: 1, 150;
+    stroke-dashoffset: 0;
+  }
+  50% {
+    stroke-dasharray: 90, 150;
+    stroke-dashoffset: -35;
+  }
+  100% {
+    stroke-dasharray: 90, 150;
+    stroke-dashoffset: -124;
+  }
+}
+
+@layer utilities {
+  .android-spinner {
+    animation: android-spin 1.4s ease-in-out infinite;
+    stroke: theme('colors.primary.DEFAULT'); /* or any desired color */
+  }
+}

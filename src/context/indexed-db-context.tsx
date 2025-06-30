@@ -1,8 +1,7 @@
 // src/context/indexed-db-context.tsx
-import { serverStore } from '@/stores/server-store'
-import { useNavigate } from '@tanstack/react-router'
-import { useStore } from '@tanstack/react-store'
 import { useEffect } from 'react'
+
+import { serverStateStore, serverStore } from '@/stores/server-store'
 import { initDB, useIndexedDB } from 'react-indexed-db-hook'
 
 // Export the ServerDB interface
@@ -46,6 +45,11 @@ export const IndexedDBProvider = ({
     const checkServers = async () => {
       const servers = await db.getAll<ServerDB>()
       serverStore.setState(servers)
+      serverStateStore.setState({
+        initialized: true,
+        loading: false,
+        error: null,
+      })
     }
     checkServers()
   }, [db])

@@ -1,3 +1,11 @@
+import { useState } from 'react'
+
+import {
+  createFileRoute,
+  useCanGoBack,
+  useRouter,
+} from '@tanstack/react-router'
+
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import { Button } from '@/components/ui/button'
 import {
@@ -11,14 +19,8 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import type { ServerDB } from '@/context/indexed-db-context'
 import { serverStore } from '@/stores/server-store'
-import {
-  createFileRoute,
-  useCanGoBack,
-  useRouter,
-} from '@tanstack/react-router'
 import { useStore } from '@tanstack/react-store'
 import { ArrowLeft, Loader2, Server } from 'lucide-react'
-import { useState } from 'react'
 import { useIndexedDB } from 'react-indexed-db-hook'
 
 export const Route = createFileRoute('/servers/add')({
@@ -53,21 +55,27 @@ function RouteComponent() {
       //   )
       // }
 
-      // Check if this is the first server
-      const existingServers = await db.getAll<ServerDB>()
-      const isFirstServer = existingServers.length === 0
-
       const server: ServerDB = {
         name: name || 'Media Server',
         url: baseUrl.endsWith('/') ? baseUrl.slice(0, -1) : baseUrl,
-        active: isFirstServer, // First server is automatically active
+        active: true, // First server is automatically active
         addedOn: new Date(),
         version: 'unknown',
       }
 
+      // make other servers inactive
+      const oldServers = await db.getAll<ServerDB>()
+      await Promise.all(
+        oldServers.map(async (s) => await db.update({ ...s, active: false }))
+      )
+
       await db.add(server)
       const servers = await db.getAll<ServerDB>()
       serverStore.setState(servers)
+
+      // todo)) add authentication
+      // router.navigate({ to: '/login', from: '/servers/add' })
+      router.navigate({ to: '/', from: '/servers/add' })
 
       // if (isFirstServer) {
       //   setBaseUrl(server.baseUrl)
@@ -87,23 +95,23 @@ function RouteComponent() {
   }
 
   return (
-    <div className="min-h-screen bg-background p-4 flex items-center">
-      <div className="max-w-md mx-auto">
+    <div className='bg-background flex min-h-screen items-center p-4'>
+      <div className='mx-auto max-w-md'>
         {canGoBack && servers.length ? (
           <Button
-            variant="ghost"
+            variant='ghost'
             onClick={() => router.history.back()}
-            className="mb-6"
+            className='mb-6'
           >
-            <ArrowLeft className="h-4 w-4 mr-2" />
+            <ArrowLeft className='mr-2 h-4 w-4' />
             Back
           </Button>
         ) : null}
 
-        <Card className="w-md">
-          <CardHeader className="text-center">
-            <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-primary/10">
-              <Server className="h-6 w-6 text-primary" />
+        <Card className='w-md'>
+          <CardHeader className='text-center'>
+            <div className='bg-primary/10 mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full'>
+              <Server className='text-primary h-6 w-6' />
             </div>
             <CardTitle>Add Media Server</CardTitle>
             <CardDescription>
@@ -111,25 +119,25 @@ function RouteComponent() {
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <form onSubmit={handleSubmit} className="space-y-4">
-              <div className="space-y-2">
-                <Label htmlFor="name">Server Name</Label>
+            <form onSubmit={handleSubmit} className='space-y-4'>
+              <div className='space-y-2'>
+                <Label htmlFor='name'>Server Name</Label>
                 <Input
-                  id="name"
-                  type="text"
-                  placeholder="My Media Server"
+                  id='name'
+                  type='text'
+                  placeholder='My Media Server'
                   value={name}
                   onChange={(e) => setName(e.target.value)}
                   disabled={isLoading}
                 />
               </div>
 
-              <div className="space-y-2">
-                <Label htmlFor="baseUrl">Server URL *</Label>
+              <div className='space-y-2'>
+                <Label htmlFor='baseUrl'>Server URL *</Label>
                 <Input
-                  id="baseUrl"
-                  type="url"
-                  placeholder="https://api.example.com"
+                  id='baseUrl'
+                  type='url'
+                  placeholder='https://api.example.com'
                   value={baseUrl}
                   onChange={(e) => setBaseUrlState(e.target.value)}
                   required
@@ -138,13 +146,13 @@ function RouteComponent() {
               </div>
 
               {error && (
-                <Alert variant="destructive">
+                <Alert variant='destructive'>
                   <AlertDescription>{error}</AlertDescription>
                 </Alert>
               )}
 
-              <Button type="submit" className="w-full" disabled={isLoading}>
-                {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+              <Button type='submit' className='w-full' disabled={isLoading}>
+                {isLoading && <Loader2 className='mr-2 h-4 w-4 animate-spin' />}
                 {isLoading ? 'Testing Connection...' : 'Add Server'}
               </Button>
             </form>
